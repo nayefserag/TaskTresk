@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { TaskDto, UpdateTaskDto } from 'src/DTOs/task.dto';
@@ -21,6 +21,9 @@ export class TasksService {
       throw new Error('Invalid Task ID');
     }
     const task = await this.taskModel.findById(id, { _id: 0, __v: 0 });
+    if (!task) {
+      throw new NotFoundException('Task Not Found');
+    }
     return task;
   }
   async getTaskByTitle(titleFragment: string): Promise<TaskDto[]> {
@@ -33,21 +36,14 @@ export class TasksService {
   }
 
   async updateTask( id: string, body: UpdateTaskDto): Promise<UpdateTaskDto | Error> {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new Error('Invalid Task ID');
-    }
-    const task = await this.taskModel.findByIdAndUpdate(id, body, {
-      new: true,
-    });
+    const task = await this.getTask(id);
+    await this.taskModel.findByIdAndUpdate(id, body, {new: true,});
     return task;
   }
 
   async deleteTask(id: string): Promise<TaskDto | Error | Object > {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new Error('Invalid Task ID');
-    }
-    const task = await this.taskModel.findByIdAndDelete(id);
-
+    const task = await this.getTask(id);
+    await this.taskModel.findByIdAndDelete(id);
     return task;
   }
 }
