@@ -8,7 +8,6 @@ import { UpdateUserDto, UserDto } from 'src/dto/user.dto';
 @UseGuards(JwtAuthGuard)
 @Controller('usersOperations')
 
-// @UseGuards(AuthGuard('jwt'))
 export class UsersOperationsController {
   constructor(private operations: UsersOperationsService) {}
   @Get('getallusers')
