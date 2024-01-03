@@ -67,7 +67,7 @@ export class TasksController {
     try {
       const task = await this.taskservice.updateTask(id, TaskDto);
       if (task) {
-        res.status(200).json({ task: task , message: 'Task Updated Successfully'});
+        res.status(200).json({ message: 'Task Updated Successfully'});
       } else {
         res.status(400).json({ message: 'Task Not Found' });
       }
@@ -81,7 +81,7 @@ export class TasksController {
     try {
       const task = await this.taskservice.deleteTask(id);
       if (task) {
-        res.status(200).json({ task: task , message: 'Task Deleted Successfully'});
+        res.status(200).json({ message: 'Task Deleted Successfully'});
       } else {
         res.status(400).json({ message: 'Task Not Found' });
       }

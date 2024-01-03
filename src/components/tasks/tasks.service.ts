@@ -8,7 +8,6 @@ import { UsersOperationsService } from '../users.operations/users.operations.ser
 @Injectable()
 export class TasksService {
   constructor(
-    @InjectModel('user') private userModel: Model<UserDto>,
     @InjectModel('Task') private taskModel: Model<TaskDto>,
     private userOperations: UsersOperationsService,
   ) {}
@@ -25,7 +24,7 @@ export class TasksService {
     return tasks;
   }
 
-  async getTask(id: string): Promise<TaskDto | Error> {
+  async getTask(id: string): Promise<TaskDto | Error | any> {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new Error('Invalid Task ID');
     }
@@ -48,15 +47,38 @@ export class TasksService {
     id: string,
     body: UpdateTaskDto,
   ): Promise<UpdateTaskDto | Error> {
-    const task = await this.getTask(id);
-    await this.taskModel.findByIdAndUpdate(id, body, { new: true });
-    
-    return task;
+    await this.getTask(id);
+    const updatedTask = await this.taskModel.findByIdAndUpdate(id, body, {
+      new: true,
+    });
+
+    const user = await this.userOperations.getuser(null, updatedTask.author);
+    const taskIndex = user.tasks.findIndex(
+      (task) => task._id.toString() === id,
+    );
+
+    if (taskIndex === -1) {
+      throw new NotFoundException('Task Not Found in User Tasks');
+    }
+
+    user.tasks[taskIndex] = updatedTask;
+    await user.save();
+
+    return updatedTask;
   }
 
   async deleteTask(id: string): Promise<TaskDto | Error | Object> {
     const task = await this.getTask(id);
     await this.taskModel.findByIdAndDelete(id);
-    return task;
+  
+    const user = await this.userOperations.getuser(null, task.author);
+    const taskIndex = user.tasks.findIndex((task) => task._id.toString() === id);
+  
+    if (taskIndex !== -1) {
+      user.tasks.splice(taskIndex, 1);
+      await user.save();
+    }
+  
+    return true;
   }
 }
