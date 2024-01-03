@@ -1,21 +1,24 @@
-import { Controller, Delete, Get, Patch, UsePipes } from '@nestjs/common';
+import { Controller, Delete, Get, Patch, UseGuards, UsePipes } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { ConfigService } from '@nestjs/config';
 import { Body, ValidationPipe, Post, Res, Param } from '@nestjs/common';
 import { Response } from 'express';
 import { TaskDto, UpdateTaskDto } from 'src/DTOs/task.dto';
+import { AuthService } from '../auth/auth.service';
+import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('tasks')
 export class TasksController {
   constructor(
-    private taskservice: TasksService,
-    // configservice : ConfigService
+    private taskservice: TasksService
   ) {}
 
   @Post('addTask')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
-  createTask(@Body() TaskDto: TaskDto, @Res() res: Response) {
-    const newTask = this.taskservice.createTask(TaskDto);
+  async createTask(@Body() TaskDto: TaskDto, @Res() res: Response) {
+    const newTask = await this.taskservice.createTask(TaskDto);
     if (newTask) {
       res.status(200).json({ message: 'Task Added Successfully' });
     } else {

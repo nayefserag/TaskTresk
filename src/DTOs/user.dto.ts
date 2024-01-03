@@ -1,4 +1,5 @@
 import { IsBoolean, IsNotEmpty, IsString, IsOptional, MinLength, IsNumber, IsEmail, IsStrongPassword } from 'class-validator';
+import { TaskDto } from './task.dto';
 
 export class UserDto {
 
@@ -30,7 +31,7 @@ export class UserDto {
     refreshToken: string;
 
     @IsOptional()
-    tasks: string[];
+    tasks: TaskDto[];
 
     @IsOptional()
     createdAt: Date;
@@ -76,10 +77,20 @@ export class UpdateUserDto {
     refreshToken: string;
 
     @IsOptional()
-    tasks: string[];
+    tasks: TaskDto[];
     
     @IsOptional()
     updatedAt: Date;
+
+    @IsOptional()
+    createdAt: Date;
+
+    @IsOptional()
+    deletedAt: Date;
+
+    @IsOptional()
+    _id: string;
+
 
 
 }

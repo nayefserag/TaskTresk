@@ -7,7 +7,7 @@ export const UserSchema = new mongoose.Schema({
     isActive: { type: Boolean, default: false },
     otp : { type: Number },
     refreshToken: { type: String },
-    tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }],
+    tasks: { type: Array , ref: 'Task' },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
     deletedAt: { type: Date },
