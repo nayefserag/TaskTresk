@@ -1,24 +1,33 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://i.imgur.com/MLPw0SL.png" width="400" alt="Nest Logo" /></a>
+  <a href="http://nestjs.com/" target="blank">
+    <img src="https://i.imgur.com/MLPw0SL.png" width="400" alt="Nest Logo" />
+  </a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">TaskTrek</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+<h1 align="center">TaskTrek</h1>
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+TaskTrek is a powerful server-side backend built with NestJS, a progressive Node.js framework. This application leverages the capabilities of NestJS, along with JWT authentication, Express, and Mongoose, to provide a robust foundation for handling CRUD (Create, Read, Update, Delete) operations through APIs.
+
+### Key Features
+
+- **NestJS Framework:** TaskTrek is developed using NestJS, which brings a modular and scalable structure to your backend. It follows best practices and design patterns, making it easy to maintain and extend.
+
+- **JWT Authentication:** Secure your APIs with JSON Web Token (JWT) authentication. TaskTrek ensures that only authorized users can access the protected resources, enhancing the overall security of your application.
+
+- **Express:** TaskTrek utilizes Express, a popular web application framework for Node.js, to handle HTTP requests and streamline the development of RESTful APIs.
+
+- **Mongoose:** The application integrates Mongoose, an elegant MongoDB object modeling tool, to interact with the MongoDB database seamlessly. This allows for efficient data storage and retrieval.
+
+- **Swagger Documentation:** The API endpoints in TaskTrek are documented using Swagger, providing a clear and interactive interface for developers to explore and understand the available endpoints, request/response formats, and authentication requirements.
 
 ## Installation
 
+To set up TaskTrek locally, follow these steps:
+
 ```bash
 $ npm install
-```
-
 ## Running the app
 
 ```bash
@@ -45,16 +54,6 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+- Author - [Nayf Serag](https://github.com/nayefserag)
