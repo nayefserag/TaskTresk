@@ -1,9 +1,16 @@
-import { Controller, Delete, Get, Patch, UseGuards, UsePipes } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  UseGuards,
+  UsePipes,
+} from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { ConfigService } from '@nestjs/config';
 import { Body, ValidationPipe, Post, Res, Param } from '@nestjs/common';
 import { Response } from 'express';
-import { TaskDto, UpdateTaskDto } from 'src/DTOs/task.dto';
+import { TaskDto, UpdateTaskDto } from 'src/dto/task.dto';
 import { AuthService } from '../auth/auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
@@ -11,9 +18,7 @@ import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
 @UseGuards(JwtAuthGuard)
 @Controller('tasks')
 export class TasksController {
-  constructor(
-    private taskservice: TasksService
-  ) {}
+  constructor(private taskservice: TasksService) {}
 
   @Post('addTask')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
@@ -46,15 +51,15 @@ export class TasksController {
         res.status(400).json({ message: 'Task Not Found' });
       }
     } catch (err) {
-      res.status(400).json({Error :err.message});
+      res.status(400).json({ Error: err.message });
     }
   }
 
   @Get('getTaskByTitle/:title')
   async getTaskByTitle(@Res() res: Response, @Param('title') title: string) {
     const task = await this.taskservice.getTaskByTitle(title);
-    if (task.length ===0){
-      return  res.status(400).json({ message: 'Task Not Found' });
+    if (task.length === 0) {
+      return res.status(400).json({ message: 'Task Not Found' });
     }
     if (task) {
       res.status(200).json({ task: task });
@@ -63,16 +68,20 @@ export class TasksController {
     }
   }
   @Patch('updateTask/:id')
-  async updateTask( @Res() res: Response, @Param('id') id: string, @Body() TaskDto: UpdateTaskDto) {
+  async updateTask(
+    @Res() res: Response,
+    @Param('id') id: string,
+    @Body() TaskDto: UpdateTaskDto,
+  ) {
     try {
       const task = await this.taskservice.updateTask(id, TaskDto);
       if (task) {
-        res.status(200).json({ message: 'Task Updated Successfully'});
+        res.status(200).json({ message: 'Task Updated Successfully' });
       } else {
         res.status(400).json({ message: 'Task Not Found' });
       }
     } catch (err) {
-      res.status(400).json({Error :err.message});
+      res.status(400).json({ Error: err.message });
     }
   }
 
@@ -81,12 +90,12 @@ export class TasksController {
     try {
       const task = await this.taskservice.deleteTask(id);
       if (task) {
-        res.status(200).json({ message: 'Task Deleted Successfully'});
+        res.status(200).json({ message: 'Task Deleted Successfully' });
       } else {
         res.status(400).json({ message: 'Task Not Found' });
       }
     } catch (err) {
-      res.status(400).json({Error :err.message});
+      res.status(400).json({ Error: err.message });
     }
   }
 }

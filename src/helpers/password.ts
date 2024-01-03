@@ -5,8 +5,8 @@ public static async hashPassword(password: string): Promise<string> {
     const hasedpassword = bcrypt.hash(password, salt);
     return hasedpassword;
   }
-  public static async Match(password1: string , password2 : string): Promise<boolean> {
-    const isMatch = await bcrypt.compare(password1, password2);
+  public static async Match(hasedPassword: string , plainTextPassword : string): Promise<boolean> {
+    const isMatch = await bcrypt.compare(hasedPassword, plainTextPassword);
     return isMatch
   }
 }

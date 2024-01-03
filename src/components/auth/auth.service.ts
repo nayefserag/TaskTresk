@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
-import { UserDto } from 'src/DTOs/user.dto';
+import { UserDto } from 'src/dto/user.dto';
 import { Password } from 'src/helpers/password';
 
 @Injectable()

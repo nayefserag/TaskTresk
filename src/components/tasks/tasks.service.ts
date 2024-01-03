@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
-import { TaskDto, UpdateTaskDto } from 'src/DTOs/task.dto';
-import { UserDto } from 'src/DTOs/user.dto';
+import { TaskDto, UpdateTaskDto } from 'src/dto/task.dto';
+import { UserDto } from 'src/dto/user.dto';
 import { UsersOperationsService } from '../users.operations/users.operations.service';
 
 @Injectable()
@@ -70,15 +70,17 @@ export class TasksService {
   async deleteTask(id: string): Promise<TaskDto | Error | Object> {
     const task = await this.getTask(id);
     await this.taskModel.findByIdAndDelete(id);
-  
+
     const user = await this.userOperations.getuser(null, task.author);
-    const taskIndex = user.tasks.findIndex((task) => task._id.toString() === id);
-  
+    const taskIndex = user.tasks.findIndex(
+      (task) => task._id.toString() === id,
+    );
+
     if (taskIndex !== -1) {
       user.tasks.splice(taskIndex, 1);
       await user.save();
     }
-  
+
     return true;
   }
 }

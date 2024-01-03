@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
-import { UpdateUserDto, UserDto } from 'src/DTOs/user.dto';
+import { UpdateUserDto, UserDto } from 'src/dto/user.dto';
 // import { JwtService } from '@nestjs/jwt';
 import { Password } from 'src/helpers/password';
 // @UseGuards(JwtAuthGuard)
@@ -91,11 +91,11 @@ export class AuthController {
       email: user.email,
       isActive: user.isActive,
       id: user._id,
-    }
+    };
     const token = await this.authService.createToken(payload);
     return res
       .status(200)
-      .header({ Token: token})
+      .header({ Token: token })
       .json({ message: 'Token Refreshed', accesstoken: token });
   }
 }

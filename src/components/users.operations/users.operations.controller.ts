@@ -3,16 +3,14 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
 import { UsersOperationsService } from './users.operations.service';
 import { AuthGuard } from '@nestjs/passport';
-import { UpdateUserDto, UserDto } from 'src/DTOs/user.dto';
+import { UpdateUserDto, UserDto } from 'src/dto/user.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('usersOperations')
 
 // @UseGuards(AuthGuard('jwt'))
 export class UsersOperationsController {
-  constructor(
-    private operations: UsersOperationsService,
-  ) {}
+  constructor(private operations: UsersOperationsService) {}
   @Get('getallusers')
   async getallusers() {
     const users = await this.operations.getallusers();
@@ -20,13 +18,13 @@ export class UsersOperationsController {
   }
 
   @Get('getuser')
-  async getuser(@Body('id') id: string = null , @Body('name') name: string) {
-    const user = await this.operations.getuser(id ,name);
+  async getuser(@Body('id') id: string = null, @Body('name') name: string) {
+    const user = await this.operations.getuser(id, name);
     return user;
   }
 
   @Get('deleteuser')
-  async deleteuser(@Body('id') id: string = null , @Body('name') name?: string) {
+  async deleteuser(@Body('id') id: string = null, @Body('name') name?: string) {
     const user = await this.operations.deleteuser(id, name);
     return user;
   }
@@ -43,7 +41,6 @@ export class UsersOperationsController {
     return user;
   }
 
-
   @Get('getuserCompletedTasks/:id')
   async getuserCompletedTasks(@Param('id') id: string) {
     const user = await this.operations.getuserCompletedTasks(id);
@@ -55,8 +52,4 @@ export class UsersOperationsController {
     const user = await this.operations.getuserIncompleteTasks(id);
     return user;
   }
-  
-  
-
-  
 }

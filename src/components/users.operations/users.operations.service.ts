@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
-import { TaskDto } from 'src/DTOs/task.dto';
-import { UpdateUserDto, UserDto } from 'src/DTOs/user.dto';
+import { TaskDto } from 'src/dto/task.dto';
+import { UpdateUserDto, UserDto } from 'src/dto/user.dto';
 import { Password } from 'src/helpers/password';
 
 @Injectable()
@@ -23,7 +23,7 @@ export class UsersOperationsService {
   async getuser(
     id: string,
     name?: string,
-  ): Promise<UserDto | NotFoundException |any> {
+  ): Promise<UserDto | NotFoundException | any> {
     if (name) {
       const user = await this.userModel.findOne({ name });
       if (!user) {
