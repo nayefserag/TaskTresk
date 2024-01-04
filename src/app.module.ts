@@ -6,6 +6,7 @@ import { AuthModule } from './components/auth/auth.module';
 import { UsersOperationsModule } from './components/users.operations/users.operations.module';
 import { UsersOperationsService } from './components/users.operations/users.operations.service';
 import { TasksService } from './components/tasks/tasks.service';
+import { GoogleAuthService } from './config/google-auth.config';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -17,6 +18,6 @@ import { TasksService } from './components/tasks/tasks.service';
     AuthModule,
     UsersOperationsModule,
   ],
-  // providers: [UsersOperationsService ,TasksService],
+  providers: [UsersOperationsService ,TasksService ,GoogleAuthService],
 })
 export class AppModule {}

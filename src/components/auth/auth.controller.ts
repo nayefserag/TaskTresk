@@ -5,6 +5,7 @@ import {
   Post,
   Req,
   Res,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -16,6 +17,7 @@ import { ConfigService } from '@nestjs/config';
 import { OtpService } from 'src/services/otp/otp.service';
 import { MailerService } from 'src/services/mailer/mailer.service';
 import { OTPDto, OtpResend } from 'src/dto/otp.dto';
+import { AuthGuard } from '@nestjs/passport';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -108,7 +110,6 @@ export class AuthController {
   @Post('/verify-otp')
   @UsePipes(new ValidationPipe({ transform: true }))
   async verifyOtp(@Body() UserData: OTPDto, @Res() res: Response) {
-    
     const user = await this.authService.findUser(UserData.email);
     if (!user) {
       return res.status(400).json({ message: 'Email Not Found' });
@@ -159,4 +160,74 @@ export class AuthController {
       .header({ Token: token })
       .json({ message: 'Token Refreshed', accesstoken: token });
   }
+
+  @Get('/google')
+  async googleAuth() {}
+  @Get('/google/callback')
+  @UseGuards(AuthGuard('google'))
+  async googleAuthRedirect(@Req() req, @Res() res: Response): Promise<void> {
+    const user = req.user;
+    if (user) {
+      const userExist = await this.authService.findUser(user.email);
+      if (!userExist) {
+        user.name = user.name.firstName + (user.name.lastName ? ' ' + user.name.lastName : '');
+
+        const newUser = await this.authService.createUser(user);
+        newUser.isVerified = true;
+        const payload = {
+          email: newUser.email,
+          isVerified: newUser.isVerified,
+          id: newUser._id,
+        };
+        const token = await this.authService.createToken(
+          payload,
+          this.configService.get('ACCESS_TOKEN_EXPIRES_IN'),
+        );
+        const refreshToken = await this.authService.createToken(
+          {},
+          this.configService.get('REFRESH_TOKEN_EXPIRES_IN'),
+        );
+        newUser.refreshToken = refreshToken;
+        await this.authService.updateUser(newUser._id, newUser);
+        res
+          .header(this.configService.get('ACCESS_TOKEN_NAME'), token)
+          .status(201)
+          .json({
+            message: `Thanks ${newUser.name} To Register In TaskTresk ^_^`,
+            statusCode: 201,
+            newUser,
+            token,
+            refreshToken,
+          });
+      } else {
+        const payload = {
+          email: userExist.email,
+          isVerified: userExist.isVerified,
+          id: userExist._id,
+        };
+        const token = await this.authService.createToken(
+          payload,
+          this.configService.get('ACCESS_TOKEN_EXPIRES_IN'),
+        );
+        const refreshToken = await this.authService.createToken(
+          {},
+          this.configService.get('REFRESH_TOKEN_EXPIRES_IN'),
+        );
+        userExist.refreshToken = refreshToken;
+        await this.authService.updateUser(userExist._id, userExist);
+        res
+          .header(this.configService.get('ACCESS_TOKEN_NAME'), token)
+          .status(200)
+          .json({
+            message: `Welcome Again ${userExist.name} To My TaskTresk ^_^`,
+            statusCode: 200,
+            user,
+          });
+      }
+    } else {
+      res.redirect('/login?error=google_login_failed');
+    }
+  }
+
+  
 }

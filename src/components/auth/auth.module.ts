@@ -7,6 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { OtpService } from 'src/services/otp/otp.service';
 import { MailerService } from 'src/services/mailer/mailer.service';
+import { GoogleAuthService } from 'src/config/google-auth.config';
 
 @Module({
   imports: [
@@ -22,6 +23,6 @@ import { MailerService } from 'src/services/mailer/mailer.service';
     ConfigModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, OtpService, MailerService],
+  providers: [AuthService, OtpService, MailerService,GoogleAuthService],
 })
 export class AuthModule {}

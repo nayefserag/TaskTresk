@@ -12,10 +12,14 @@ export class UserDto {
     @IsEmail()
     email: string;
 
-    @IsNotEmpty()
+
     @IsString()
     @IsStrongPassword()
     password: string;
+
+    @IsOptional()
+    @IsString()
+    googleid: string;
 
     @IsOptional()
     @IsBoolean()
@@ -62,6 +66,10 @@ export class UpdateUserDto {
     @IsString()
     @IsStrongPassword()
     password: string;
+
+    @IsOptional()
+    @IsString()
+    googleid: string;
 
     @IsOptional()
     @IsBoolean()

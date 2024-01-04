@@ -5,6 +5,7 @@ export const UserSchema = new mongoose.Schema({
     email: { type: String },
     password: { type: String },
     isVerified: { type: Boolean, default: false },
+    googleid: { type: String },
     otp : { type: String },
     refreshToken: { type: String },
     tasks: { type: Array , ref: 'Task' },

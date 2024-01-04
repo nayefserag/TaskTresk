@@ -14,7 +14,9 @@ export class AuthService {
 
   async createUser(body: UserDto): Promise<UserDto> {
     const user = await this.userModel.create(body);
-    user.password = await Password.hashPassword(user.password);
+    if (body.password) {
+      user.password = await Password.hashPassword(user.password);
+    }
 
     await this.updateUser(user._id, user);
     return user;
