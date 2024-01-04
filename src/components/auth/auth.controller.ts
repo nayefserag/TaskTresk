@@ -167,8 +167,6 @@ export class AuthController {
       .json({ message: 'Token Refreshed', accesstoken: token });
   }
 
-  @Get('/google')
-  async googleAuth() {}
   @Get('/google/callback')
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
