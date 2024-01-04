@@ -13,10 +13,16 @@ import { AuthService } from './auth.service';
 import { UpdateUserDto, UserDto } from 'src/dto/user.dto';
 import { Password } from 'src/helpers/password';
 import { ConfigService } from '@nestjs/config';
+import { OtpService } from 'src/services/otp/otp.service';
+import { MailerService } from 'src/services/mailer/mailer.service';
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService ,
-              private configService: ConfigService) {}
+  constructor(
+    private authService: AuthService,
+    private configService: ConfigService,
+    private readonly otpService: OtpService,
+    private readonly mailerService: MailerService,
+  ) {}
 
   @Post('/signup')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
@@ -36,15 +42,24 @@ export class AuthController {
         isActive: user.isActive,
         id: user._id,
       };
-      const token = await this.authService.createToken(payload ,this.configService.get('ACCESS_TOKEN_EXPIRES_IN'));
-      const refreshToken = await this.authService.createToken({}, this.configService.get('REFRESH_TOKEN_EXPIRES_IN'));
+      const token = await this.authService.createToken(
+        payload,
+        this.configService.get('ACCESS_TOKEN_EXPIRES_IN'),
+      );
+      const refreshToken = await this.authService.createToken(
+        {},
+        this.configService.get('REFRESH_TOKEN_EXPIRES_IN'),
+      );
       user.refreshToken = refreshToken;
+      const otp = this.otpService.generateOTP();
+      user.otp = otp.otp;
+      await this.mailerService.sendOtpEmail(user.email, otp.otp);
       await this.authService.updateUser(user._id, user);
       if (user) {
         res
           .status(201)
           .header({ Token: token, RefreshToken: refreshToken })
-          .json({ message: 'User Created Successfully', token: token });
+          .json({ message: 'User Created Successfully,We Sent Otp Please Verify Email', token: token });
       } else {
         res.status(400).json({ Error: 'User Not Created' });
       }
@@ -66,8 +81,14 @@ export class AuthController {
       isActive: user.isActive,
       id: user._id,
     };
-    const token = await this.authService.createToken(payload ,this.configService.get('ACCESS_TOKEN_EXPIRES_IN'));
-    const refreshToken = await this.authService.createToken({} ,this.configService.get('REFRESH_TOKEN_EXPIRES_IN'));
+    const token = await this.authService.createToken(
+      payload,
+      this.configService.get('ACCESS_TOKEN_EXPIRES_IN'),
+    );
+    const refreshToken = await this.authService.createToken(
+      {},
+      this.configService.get('REFRESH_TOKEN_EXPIRES_IN'),
+    );
     user.refreshToken = refreshToken;
 
     await this.authService.updateUser(user._id, user);
@@ -92,7 +113,10 @@ export class AuthController {
       isActive: user.isActive,
       id: user._id,
     };
-    const token = await this.authService.createToken(payload ,this.configService.get('ACCESS_TOKEN_EXPIRES_IN'));
+    const token = await this.authService.createToken(
+      payload,
+      this.configService.get('ACCESS_TOKEN_EXPIRES_IN'),
+    );
     return res
       .status(200)
       .header({ Token: token })

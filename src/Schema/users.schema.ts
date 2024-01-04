@@ -5,7 +5,7 @@ export const UserSchema = new mongoose.Schema({
     email: { type: String },
     password: { type: String },
     isActive: { type: Boolean, default: false },
-    otp : { type: Number },
+    otp : { type: String },
     refreshToken: { type: String },
     tasks: { type: Array , ref: 'Task' },
     createdAt: { type: Date, default: Date.now },

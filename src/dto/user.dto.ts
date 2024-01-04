@@ -23,7 +23,7 @@ export class UserDto {
 
     @IsOptional()
     @IsNumber()
-    otp : Number
+    otp : string
 
     @IsOptional()
     @IsString()
@@ -69,7 +69,7 @@ export class UpdateUserDto {
 
     @IsOptional()
     @IsNumber()
-    otp : Number
+    otp : string
 
     @IsOptional()
     @IsString()
