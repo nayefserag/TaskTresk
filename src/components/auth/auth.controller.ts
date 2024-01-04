@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Patch,
   Post,
   Req,
   Res,
@@ -249,7 +250,7 @@ export class AuthController {
     });
   }
 
-  @Post('/reset-password')
+  @Patch('/reset-password')
   async resetPassword(@Body() UserData: UserPasswordDto, @Res() res: Response) {
     const user = await this.authService.findUser(UserData.email);
     if (!user) {
