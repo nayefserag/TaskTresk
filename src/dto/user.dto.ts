@@ -19,7 +19,7 @@ export class UserDto {
 
     @IsOptional()
     @IsBoolean()
-    isActive: boolean;
+    isVerified: boolean;
 
     @IsOptional()
     @IsNumber()
@@ -65,7 +65,7 @@ export class UpdateUserDto {
 
     @IsOptional()
     @IsBoolean()
-    isActive: boolean;
+    isVerified: boolean;
 
     @IsOptional()
     @IsNumber()

@@ -15,6 +15,7 @@ import { Password } from 'src/helpers/password';
 import { ConfigService } from '@nestjs/config';
 import { OtpService } from 'src/services/otp/otp.service';
 import { MailerService } from 'src/services/mailer/mailer.service';
+import { OTPDto, OtpResend } from 'src/dto/otp.dto';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -39,7 +40,7 @@ export class AuthController {
 
       const payload = {
         email: user.email,
-        isActive: user.isActive,
+        isVerified: user.isVerified,
         id: user._id,
       };
       const token = await this.authService.createToken(
@@ -59,7 +60,11 @@ export class AuthController {
         res
           .status(201)
           .header({ Token: token, RefreshToken: refreshToken })
-          .json({ message: 'User Created Successfully,We Sent Otp Please Verify Email', token: token });
+          .json({
+            message:
+              'User Created Successfully,We Sent Otp Please Verify Email',
+            token: token,
+          });
       } else {
         res.status(400).json({ Error: 'User Not Created' });
       }
@@ -78,7 +83,7 @@ export class AuthController {
 
     const payload = {
       email: user.email,
-      isActive: user.isActive,
+      isVerified: user.isVerified,
       id: user._id,
     };
     const token = await this.authService.createToken(
@@ -100,6 +105,38 @@ export class AuthController {
     }
   }
 
+  @Post('/verify-otp')
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async verifyOtp(@Body() UserData: OTPDto, @Res() res: Response) {
+    
+    const user = await this.authService.findUser(UserData.email);
+    if (!user) {
+      return res.status(400).json({ message: 'Email Not Found' });
+    }
+    if (user.otp !== UserData.otp) {
+      return res.status(400).json({ message: 'Invalid Otp' });
+    }
+    user.otp = null;
+    user.isVerified = true;
+    user.updatedAt = new Date();
+    await this.authService.updateUser(user._id, user);
+
+    res.status(200).json({ message: 'Otp Verified' });
+  }
+
+  @Get('/resend-otp')
+  async resendOtp(@Body() UserData: OtpResend, @Res() res: Response) {
+    const user = await this.authService.findUser(UserData.email);
+    if (!user) {
+      return res.status(400).json({ message: 'Email Not Found' });
+    }
+    const otp = this.otpService.generateOTP();
+    user.otp = otp.otp;
+    await this.mailerService.sendOtpEmail(user.email, otp.otp);
+    await this.authService.updateUser(user._id, user);
+    res.status(200).json({ message: 'Otp Sent' });
+  }
+
   @Post('/refresh-token')
   async refreshToken(@Req() req: Request, @Res() res: Response) {
     const refreshToken = req.headers['refreshtoken'];
@@ -110,7 +147,7 @@ export class AuthController {
     const user = await this.authService.findUserByRefreshToken(refreshToken);
     const payload = {
       email: user.email,
-      isActive: user.isActive,
+      isVerified: user.isVerified,
       id: user._id,
     };
     const token = await this.authService.createToken(

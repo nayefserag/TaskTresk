@@ -4,7 +4,7 @@ export const UserSchema = new mongoose.Schema({
     name: { type: String },
     email: { type: String },
     password: { type: String },
-    isActive: { type: Boolean, default: false },
+    isVerified: { type: Boolean, default: false },
     otp : { type: String },
     refreshToken: { type: String },
     tasks: { type: Array , ref: 'Task' },
