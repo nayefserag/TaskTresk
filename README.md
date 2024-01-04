@@ -4,7 +4,7 @@
   </a>
 </p>
 
-<h1 align="center">TaskTrek</h1>
+<h1 align="center">TaskTresk</h1>
 
 ## Description
 
