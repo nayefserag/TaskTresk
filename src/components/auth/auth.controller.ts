@@ -11,7 +11,12 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
-import { UpdateUserDto, UserDto } from 'src/dto/user.dto';
+import {
+  Email,
+  UpdateUserDto,
+  UserDto,
+  UserPasswordDto,
+} from 'src/dto/user.dto';
 import { Password } from 'src/helpers/password';
 import { ConfigService } from '@nestjs/config';
 import { OtpService } from 'src/services/otp/otp.service';
@@ -165,12 +170,14 @@ export class AuthController {
   async googleAuth() {}
   @Get('/google/callback')
   @UseGuards(AuthGuard('google'))
-  async googleAuthRedirect(@Req() req, @Res() res: Response): Promise<void> {
+  async googleAuthRedirect(@Req() req, @Res() res: Response) {
     const user = req.user;
     if (user) {
       const userExist = await this.authService.findUser(user.email);
       if (!userExist) {
-        user.name = user.name.firstName + (user.name.lastName ? ' ' + user.name.lastName : '');
+        user.name =
+          user.name.firstName +
+          (user.name.lastName ? ' ' + user.name.lastName : '');
 
         const newUser = await this.authService.createUser(user);
         newUser.isVerified = true;
@@ -229,5 +236,31 @@ export class AuthController {
     }
   }
 
-  
+  @Post('/request-reset')
+  async requestPasswordReset(@Body() UserData: Email, @Res() res: Response) {
+    const user = await this.authService.findUser(UserData.email);
+    const resetcode = this.otpService.generateOTP();
+    await this.mailerService.sendPasswordResetEmail(user.email, resetcode.otp);
+    user.otp = resetcode.otp;
+    await this.authService.updateUser(user._id, user);
+    res.status(200).json({
+      message: 'Password Reset Code Sent To Your Email',
+      statusCode: 200,
+    });
+  }
+
+  @Post('/reset-password')
+  async resetPassword(@Body() UserData: UserPasswordDto, @Res() res: Response) {
+    const user = await this.authService.findUser(UserData.email);
+    if (!user) {
+      return res.status(400).json({ message: 'Email Not Found' });
+    }
+    if (user.otp !== UserData.otp) {
+      return res.status(400).json({ message: 'Invalid Reset Code' });
+    }
+    user.password = await Password.hashPassword(UserData.password);
+    user.otp = null;
+    await this.authService.updateUser(user._id, user);
+    res.status(200).json({ message: 'Password Reset Successfully' });
+  }
 }

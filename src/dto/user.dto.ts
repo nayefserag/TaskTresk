@@ -26,7 +26,7 @@ export class UserDto {
     isVerified: boolean;
 
     @IsOptional()
-    @IsNumber()
+    @IsString()
     otp : string
 
     @IsOptional()
@@ -48,6 +48,7 @@ export class UserDto {
 
     @IsOptional()
     _id: string;
+
   
 }
 export class UpdateUserDto {
@@ -76,7 +77,7 @@ export class UpdateUserDto {
     isVerified: boolean;
 
     @IsOptional()
-    @IsNumber()
+    @IsString()
     otp : string
 
     @IsOptional()
@@ -100,5 +101,25 @@ export class UpdateUserDto {
     _id: string;
 
 
+}
 
+export class UserPasswordDto {
+
+    @IsNotEmpty()
+    @IsString()
+    @IsStrongPassword()
+    password: string;
+
+    @IsNotEmpty()
+    @IsString()
+    otp : string
+
+    @IsEmail()
+    email: string;
+}
+
+export class Email {
+
+    @IsEmail()
+    email: string;
 }

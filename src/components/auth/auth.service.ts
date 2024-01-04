@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
-import { UserDto } from 'src/dto/user.dto';
+import { UpdateUserDto, UserDto } from 'src/dto/user.dto';
 import { Password } from 'src/helpers/password';
 
 @Injectable()
@@ -22,7 +22,7 @@ export class AuthService {
     return user;
   }
 
-  async findUser(email: string, name?: string): Promise<UserDto> {
+  async findUser(email: string, name?: string): Promise<UserDto | UpdateUserDto> {
     if (name) {
       const user = await this.userModel.findOne({ name });
       return user;
@@ -44,6 +44,7 @@ export class AuthService {
 
   async updateUser(id: string, body: UserDto): Promise<UserDto | Error> {
     const user = await this.findUserById(id);
+    body.updatedAt = new Date();
     await this.userModel.findByIdAndUpdate(id, body, { new: true });
     return user;
   }
