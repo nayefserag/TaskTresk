@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { TaskDto, UpdateTaskDto } from 'src/dto/task.dto';
-import { UserDto } from 'src/dto/user.dto';
 import { UsersOperationsService } from '../users.operations/users.operations.service';
 
 @Injectable()

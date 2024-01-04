@@ -52,8 +52,8 @@ export class AuthService {
     return user;
   }
 
-  async createToken(payload: any): Promise<string> {
-    const token = await this.jwtService.signAsync(payload);
+  async createToken(payload: any, expiresIn : string ): Promise<string> {
+    const token = await this.jwtService.signAsync(payload , { expiresIn: expiresIn });
     return token;
   }
 

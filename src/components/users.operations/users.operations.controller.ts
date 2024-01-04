@@ -1,9 +1,7 @@
 import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
 import { UsersOperationsService } from './users.operations.service';
-import { AuthGuard } from '@nestjs/passport';
-import { UpdateUserDto, UserDto } from 'src/dto/user.dto';
+import { UpdateUserDto } from 'src/dto/user.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('usersOperations')

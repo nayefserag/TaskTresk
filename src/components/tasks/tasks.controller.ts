@@ -7,12 +7,10 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import { ConfigService } from '@nestjs/config';
+
 import { Body, ValidationPipe, Post, Res, Param } from '@nestjs/common';
 import { Response } from 'express';
 import { TaskDto, UpdateTaskDto } from 'src/dto/task.dto';
-import { AuthService } from '../auth/auth.service';
-import { AuthGuard } from '@nestjs/passport';
 import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)

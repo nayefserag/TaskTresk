@@ -11,12 +11,12 @@ import {
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { UpdateUserDto, UserDto } from 'src/dto/user.dto';
-// import { JwtService } from '@nestjs/jwt';
 import { Password } from 'src/helpers/password';
-// @UseGuards(JwtAuthGuard)
+import { ConfigService } from '@nestjs/config';
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService ,
+              private configService: ConfigService) {}
 
   @Post('/signup')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
@@ -36,8 +36,8 @@ export class AuthController {
         isActive: user.isActive,
         id: user._id,
       };
-      const token = await this.authService.createToken(payload);
-      const refreshToken = await this.authService.createToken({});
+      const token = await this.authService.createToken(payload ,this.configService.get('ACCESS_TOKEN_EXPIRES_IN'));
+      const refreshToken = await this.authService.createToken({}, this.configService.get('REFRESH_TOKEN_EXPIRES_IN'));
       user.refreshToken = refreshToken;
       await this.authService.updateUser(user._id, user);
       if (user) {
@@ -66,8 +66,8 @@ export class AuthController {
       isActive: user.isActive,
       id: user._id,
     };
-    const token = await this.authService.createToken(payload);
-    const refreshToken = await this.authService.createToken({});
+    const token = await this.authService.createToken(payload ,this.configService.get('ACCESS_TOKEN_EXPIRES_IN'));
+    const refreshToken = await this.authService.createToken({} ,this.configService.get('REFRESH_TOKEN_EXPIRES_IN'));
     user.refreshToken = refreshToken;
 
     await this.authService.updateUser(user._id, user);
@@ -92,7 +92,7 @@ export class AuthController {
       isActive: user.isActive,
       id: user._id,
     };
-    const token = await this.authService.createToken(payload);
+    const token = await this.authService.createToken(payload ,this.configService.get('ACCESS_TOKEN_EXPIRES_IN'));
     return res
       .status(200)
       .header({ Token: token })
