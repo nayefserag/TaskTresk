@@ -6,7 +6,8 @@ import { AuthModule } from './components/auth/auth.module';
 import { UsersOperationsModule } from './components/users.operations/users.operations.module';
 import { UsersOperationsService } from './components/users.operations/users.operations.service';
 import { TasksService } from './components/tasks/tasks.service';
-import { GoogleAuthService } from './config/google-auth.config';
+import { GoogleAuthService } from './strategy/google-auth.strategy';
+import { FacebookStrategy } from './strategy/facebook.strategy';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -18,6 +19,6 @@ import { GoogleAuthService } from './config/google-auth.config';
     AuthModule,
     UsersOperationsModule,
   ],
-  providers: [UsersOperationsService ,TasksService ,GoogleAuthService],
+  providers: [UsersOperationsService, TasksService, GoogleAuthService ,FacebookStrategy],
 })
 export class AppModule {}

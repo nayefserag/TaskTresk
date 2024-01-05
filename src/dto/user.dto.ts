@@ -1,125 +1,136 @@
-import { IsBoolean, IsNotEmpty, IsString, IsOptional, MinLength, IsNumber, IsEmail, IsStrongPassword } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsString,
+  IsOptional,
+  MinLength,
+  IsNumber,
+  IsEmail,
+  IsStrongPassword,
+} from 'class-validator';
 import { TaskDto } from './task.dto';
 
 export class UserDto {
+  @IsNotEmpty()
+  @IsString()
+  name: string;
 
-    @IsNotEmpty()
-    @IsString()
-    name: string;
+  @IsNotEmpty()
+  @IsString()
+  @IsEmail()
+  email: string;
 
-    @IsNotEmpty()
-    @IsString()
-    @IsEmail()
-    email: string;
+  @IsString()
+  @IsStrongPassword()
+  password: string;
 
+  @IsOptional()
+  @IsString()
+  googleid: string;
 
-    @IsString()
-    @IsStrongPassword()
-    password: string;
+  @IsOptional()
+  @IsBoolean()
+  isVerified: boolean;
 
-    @IsOptional()
-    @IsString()
-    googleid: string;
+  @IsOptional()
+  @IsString()
+  otp: string;
 
-    @IsOptional()
-    @IsBoolean()
-    isVerified: boolean;
+  @IsOptional()
+  @IsString()
+  @MinLength(6)
+  refreshToken: string;
 
-    @IsOptional()
-    @IsString()
-    otp : string
+  @IsOptional()
+  tasks: TaskDto[];
 
-    @IsOptional()
-    @IsString()
-    @MinLength(6)
-    refreshToken: string;
+  @IsOptional()
+  createdAt: Date;
 
-    @IsOptional()
-    tasks: TaskDto[];
+  @IsOptional()
+  updatedAt: Date;
 
-    @IsOptional()
-    createdAt: Date;
+  @IsOptional()
+  deletedAt: Date;
 
-    @IsOptional()
-    updatedAt: Date;
+  @IsOptional()
+  _id: string;
 
-    @IsOptional()
-    deletedAt: Date;
-
-    @IsOptional()
-    _id: string;
-
+  @IsOptional()
+  FacebookAccessToken: string;
   
+  @IsOptional()
+  provider: string;
 }
 export class UpdateUserDto {
+  @IsOptional()
+  @IsString()
+  name: string;
 
-    
-    @IsOptional()
-    @IsString()
-    name: string;
+  @IsOptional()
+  @IsString()
+  @IsEmail()
+  email: string;
 
-    @IsOptional()
-    @IsString()
-    @IsEmail()
-    email: string;
+  @IsOptional()
+  @IsString()
+  @IsStrongPassword()
+  password: string;
 
-    @IsOptional()
-    @IsString()
-    @IsStrongPassword()
-    password: string;
+  @IsOptional()
+  @IsString()
+  googleid: string;
 
-    @IsOptional()
-    @IsString()
-    googleid: string;
+  @IsOptional()
+  @IsBoolean()
+  isVerified: boolean;
 
-    @IsOptional()
-    @IsBoolean()
-    isVerified: boolean;
+  @IsOptional()
+  @IsString()
+  otp: string;
 
-    @IsOptional()
-    @IsString()
-    otp : string
+  @IsOptional()
+  @IsString()
+  @MinLength(6)
+  refreshToken: string;
 
-    @IsOptional()
-    @IsString()
-    @MinLength(6)
-    refreshToken: string;
+  @IsOptional()
+  tasks: TaskDto[];
 
-    @IsOptional()
-    tasks: TaskDto[];
-    
-    @IsOptional()
-    updatedAt: Date;
+  @IsOptional()
+  updatedAt: Date;
 
-    @IsOptional()
-    createdAt: Date;
+  @IsOptional()
+  createdAt: Date;
 
-    @IsOptional()
-    deletedAt: Date;
+  @IsOptional()
+  deletedAt: Date;
 
-    @IsOptional()
-    _id: string;
+  @IsOptional()
+  _id: string;
 
+  @IsOptional()
+  FacebookAccessToken: string;
 
+  @IsOptional()
+  provider: string;
 }
 
 export class UserPasswordDto {
+  @IsNotEmpty()
+  @IsString()
+  @IsStrongPassword()
+  password: string;
 
-    @IsNotEmpty()
-    @IsString()
-    @IsStrongPassword()
-    password: string;
+  @IsNotEmpty()
+  @IsString()
+  otp: string;
 
-    @IsNotEmpty()
-    @IsString()
-    otp : string
-
-    @IsEmail()
-    email: string;
+  @IsEmail()
+  email: string;
 }
 
 export class Email {
-
-    @IsEmail()
-    email: string;
+  @IsEmail()
+  email: string;
 }

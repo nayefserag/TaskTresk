@@ -12,4 +12,6 @@ export const UserSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
     deletedAt: { type: Date },
+    FacebookAccessToken: { type: String },
+    provider: { type: String }
 });

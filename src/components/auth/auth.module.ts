@@ -7,7 +7,9 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { OtpService } from 'src/services/otp/otp.service';
 import { MailerService } from 'src/services/mailer/mailer.service';
-import { GoogleAuthService } from 'src/config/google-auth.config';
+import { GoogleAuthService } from 'src/strategy/google-auth.strategy';
+import { PassportModule } from '@nestjs/passport';
+import { FacebookStrategy } from 'src/strategy/facebook.strategy';
 
 @Module({
   imports: [
@@ -19,10 +21,13 @@ import { GoogleAuthService } from 'src/config/google-auth.config';
       }),
       inject: [ConfigService],
     }),
+    PassportModule.register({
+      defaultStrategy: 'facebook',
+    }),
     MongooseModule.forFeature([{ name: 'user', schema: UserSchema }]),
     ConfigModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, OtpService, MailerService,GoogleAuthService],
+  providers: [AuthService, OtpService, MailerService, GoogleAuthService , FacebookStrategy],
 })
 export class AuthModule {}
