@@ -4,7 +4,7 @@ import { UsersOperationsService } from './users.operations.service';
 import { UpdateUserDto } from 'src/dto/user.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
-@ApiTags('Tasks Operations Controller')
+@ApiTags('Users Operations Controller')
 @UseGuards(JwtAuthGuard)
 @Controller('usersOperations')
 

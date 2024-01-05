@@ -26,8 +26,8 @@ import { MailerService } from 'src/services/mailer/mailer.service';
 import { OTPDto, OtpResend } from 'src/dto/otp.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-@Controller('auth')
 @ApiTags('User Authentication')
+@Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
