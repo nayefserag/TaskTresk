@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpStatus,
   Patch,
   Post,
   Req,
@@ -24,7 +25,9 @@ import { OtpService } from 'src/services/otp/otp.service';
 import { MailerService } from 'src/services/mailer/mailer.service';
 import { OTPDto, OtpResend } from 'src/dto/otp.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 @Controller('auth')
+@ApiTags('User Authentication')
 export class AuthController {
   constructor(
     private authService: AuthService,
@@ -32,9 +35,20 @@ export class AuthController {
     private readonly otpService: OtpService,
     private readonly mailerService: MailerService,
   ) {}
-
   @Post('/signup')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  @ApiBody({ type: UserDto }) // Specify the request body DTO for Swagger documentation
+  @ApiOperation({ summary: 'User signup' })
+  @ApiResponse({ 
+    status: HttpStatus.CREATED, 
+    description: 'User created successfully, OTP sent for email verification',
+    headers: {
+      Token: { description: 'Access token', schema: { type: 'string' } },
+      RefreshToken: { description: 'Refresh token', schema: { type: 'string' } },
+    },
+  })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'User already exists or other error' })
+  
   async signup(@Body() UserData: UserDto, @Res() res: Response) {
     const existemail = await this.authService.findUser(UserData.email);
     const existname = await this.authService.findUser(
@@ -81,6 +95,18 @@ export class AuthController {
   }
 
   @Get('/login')
+  @ApiBody({ type: UpdateUserDto }) // Specify the request body DTO for Swagger documentation
+  @ApiOperation({ summary: 'User login' })
+  @ApiResponse({ 
+    status: HttpStatus.OK, 
+    description: 'User logged in successfully',
+    headers: {
+      Token: { description: 'Access token', schema: { type: 'string' } },
+      RefreshToken: { description: 'Refresh token', schema: { type: 'string' } },
+    },
+  })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'User not found or invalid password' })
+
   async login(@Body() UserData: UpdateUserDto, @Res() res: Response) {
     const user = await this.authService.findUser(UserData.email);
     if (!user) {
@@ -116,6 +142,11 @@ export class AuthController {
 
   @Post('/verify-otp')
   @UsePipes(new ValidationPipe({ transform: true }))
+  @ApiBody({ type: OTPDto }) // Specify the request body DTO for Swagger documentation
+  @ApiOperation({ summary: 'Verify OTP' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'OTP verified successfully' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Email not found or invalid OTP' })
+
   async verifyOtp(@Body() UserData: OTPDto, @Res() res: Response) {
     const user = await this.authService.findUser(UserData.email);
     if (!user) {
@@ -133,6 +164,11 @@ export class AuthController {
   }
 
   @Get('/resend-otp')
+  @ApiBody({ type: OtpResend })
+  @ApiOperation({ summary: 'Resend OTP' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'OTP resent successfully' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Email not found or other error' })
+
   async resendOtp(@Body() UserData: OtpResend, @Res() res: Response) {
     const user = await this.authService.findUser(UserData.email);
     if (!user) {
@@ -146,6 +182,10 @@ export class AuthController {
   }
 
   @Post('/refresh-token')
+  @ApiOperation({ summary: 'Refresh Access Token' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Access token refreshed successfully' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Refresh token not found or invalid' })
+
   async refreshToken(@Req() req: Request, @Res() res: Response) {
     const refreshToken = req.headers['refreshtoken'];
     if (!refreshToken) {
@@ -170,6 +210,10 @@ export class AuthController {
 
   @Get('/google/callback')
   @UseGuards(AuthGuard('google'))
+  @ApiOperation({ summary: 'Google OAuth Callback' })
+  @ApiResponse({ status: HttpStatus.CREATED, description: 'User registered or logged in successfully' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Google login failed' })
+  
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
     const user = req.user;
     if (user) {
@@ -240,6 +284,10 @@ export class AuthController {
 
   @Get('facebook/callback')
   @UseGuards(AuthGuard('facebook'))
+  @ApiOperation({ summary: 'Facebook OAuth Callback Redirect' })
+  @ApiResponse({ status: HttpStatus.CREATED, description: 'User registered or logged in successfully' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Facebook login failed or other error' })
+  
   async facebookLoginCallback(@Req() req, @Res() res: Response): Promise<any> {
     try {
       const user = req.user;
@@ -312,6 +360,11 @@ export class AuthController {
   }
 
   @Post('/request-reset')
+  @ApiBody({ type: Email }) // Specify the request body DTO for Swagger documentation
+  @ApiOperation({ summary: 'Request Password Reset' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Password reset code sent successfully' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Email not found or other error' })
+
   async requestPasswordReset(@Body() UserData: Email, @Res() res: Response) {
     const user = await this.authService.findUser(UserData.email);
     const resetcode = this.otpService.generateOTP();
@@ -325,6 +378,11 @@ export class AuthController {
   }
 
   @Patch('/reset-password')
+  @ApiBody({ type: UserPasswordDto }) // Specify the request body DTO for Swagger documentation
+  @ApiOperation({ summary: 'Reset Password' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Password reset successfully' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Email not found or invalid reset code' })
+
   async resetPassword(@Body() UserData: UserPasswordDto, @Res() res: Response) {
     const user = await this.authService.findUser(UserData.email);
     if (!user) {
