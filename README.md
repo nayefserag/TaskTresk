@@ -22,6 +22,8 @@ TaskTrek is a powerful server-side backend built with NestJS, a progressive Node
 
 - **Swagger Documentation:** The API endpoints in TaskTrek are documented using Swagger, providing a clear and interactive interface for developers to explore and understand the available endpoints, request/response formats, and authentication requirements.
 
+- **Google Calendar Integration:** TaskTrek seamlessly integrates with Google Calendar, enabling users to synchronize their tasks and to-dos with their Google Calendar. This asynchronous integration enhances task management and provides users with a unified view of their schedule.
+
 ## Installation
 
 To set up TaskTrek locally, follow these steps:
@@ -56,4 +58,6 @@ $ npm run test:cov
 
 ## Stay in touch
 
-- Author - [Nayf Serag](https://github.com/nayefserag)
+[![portfolio](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://github.com/nayefserag)
+
+[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/nayf-serag-70a3611b8)
