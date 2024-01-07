@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Patch,
   Post,
+  Query,
   Req,
   Res,
   UseGuards,
@@ -26,7 +27,8 @@ import { MailerService } from 'src/services/mailer/mailer.service';
 import { OTPDto, OtpResend } from 'src/dto/otp.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-@ApiTags('User Authentication')
+import { GoogleCalendarService } from 'src/services/google calender/google-calendar.service';
+@ApiTags('User Authentication Controller')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -34,6 +36,7 @@ export class AuthController {
     private configService: ConfigService,
     private readonly otpService: OtpService,
     private readonly mailerService: MailerService,
+    private readonly googleCalendarService: GoogleCalendarService
   ) {}
   @Post('/signup')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
@@ -208,6 +211,19 @@ export class AuthController {
       .json({ message: 'Token Refreshed', accesstoken: token });
   }
 
+
+
+  @Get('/google')
+  async auth() {
+    const url = this.googleCalendarService.generateAuthUrl();
+    return {url}; 
+  }
+  @Get('/callback')
+  async authCallback(@Query('code') code: string) {
+    await this.googleCalendarService.handleAuth(code);
+    return {message: 'Authentication successful'};
+  }
+
   @Get('/google/callback')
   @UseGuards(AuthGuard('google'))
   @ApiOperation({ summary: 'Google OAuth Callback' })
@@ -281,6 +297,7 @@ export class AuthController {
       res.redirect('/login?error=google_login_failed');
     }
   }
+
 
   @Get('facebook/callback')
   @UseGuards(AuthGuard('facebook'))

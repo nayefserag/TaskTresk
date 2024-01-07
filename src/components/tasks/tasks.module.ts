@@ -8,6 +8,7 @@ import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
 import { UserSchema } from 'src/Schema/users.schema';
 import { UsersOperationsService } from '../users.operations/users.operations.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { GoogleCalendarService } from 'src/services/google calender/google-calendar.service';
 
 @Module({
   imports: [
@@ -24,6 +25,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     
   ],
   controllers: [TasksController],
-  providers: [TasksService,JwtAuthGuard,UsersOperationsService],
+  providers: [TasksService,JwtAuthGuard,UsersOperationsService ,GoogleCalendarService],
 })
 export class TasksModule {}

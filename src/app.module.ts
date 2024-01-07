@@ -8,6 +8,7 @@ import { UsersOperationsService } from './components/users.operations/users.oper
 import { TasksService } from './components/tasks/tasks.service';
 import { GoogleAuthService } from './strategy/google-auth.strategy';
 import { FacebookStrategy } from './strategy/facebook.strategy';
+import { GoogleCalendarService } from './services/google calender/google-calendar.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -19,6 +20,6 @@ import { FacebookStrategy } from './strategy/facebook.strategy';
     AuthModule,
     UsersOperationsModule,
   ],
-  providers: [UsersOperationsService, TasksService, GoogleAuthService ,FacebookStrategy],
+  providers: [UsersOperationsService, TasksService, GoogleAuthService ,FacebookStrategy,GoogleCalendarService],
 })
 export class AppModule {}

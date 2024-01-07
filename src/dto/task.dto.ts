@@ -22,6 +22,19 @@ export class TaskDto {
   @IsOptional()
   @IsBoolean()
   readonly isCompleted?: boolean;
+
+  @ApiProperty({ example: true, description: 'Indicates whether the task is synced with Google Calendar', required: false })
+  @IsOptional()
+  @IsBoolean()
+  readonly isSyncedWithGoogleCalendar?: boolean;
+
+  @ApiProperty({ example: new Date(), description: 'The start date of the task', required: false ,default: Date.now()})
+  @IsNotEmpty()
+  readonly startDate: Date;
+
+  @ApiProperty({ example: new Date(), description: 'The end date of the task', required: true })
+  @IsNotEmpty()
+  readonly endDate: Date;
 }
 
 export class UpdateTaskDto {
@@ -46,4 +59,17 @@ export class UpdateTaskDto {
   @IsOptional()
   @IsBoolean()
   readonly isCompleted?: boolean;
+
+  @ApiProperty({ example: true, description: 'Indicates whether the task is synced with Google Calendar', required: false })
+  @IsOptional()
+  @IsBoolean()
+  readonly isSyncedWithGoogleCalendar?: boolean;
+
+  @ApiProperty({ example: '2022-01-01T00:00:00.000Z', description: 'The updated start date of the task', required: false })
+  @IsOptional()
+  readonly startDate?: Date;
+
+  @ApiProperty({ example: '2022-01-01T00:00:00.000Z', description: 'The updated end date of the task', required: false })
+  @IsOptional()
+  readonly endDate?: Date;
 }

@@ -3,15 +3,20 @@ import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { TaskDto, UpdateTaskDto } from 'src/dto/task.dto';
 import { UsersOperationsService } from '../users.operations/users.operations.service';
+import { GoogleCalendarService } from 'src/services/google calender/google-calendar.service';
 
 @Injectable()
 export class TasksService {
   constructor(
     @InjectModel('Task') private taskModel: Model<TaskDto>,
     private userOperations: UsersOperationsService,
+    // private googleCalendarService: GoogleCalendarService,
   ) {}
 
   async createTask(body: TaskDto): Promise<TaskDto> {
+    // if(body.isSyncedWithGoogleCalendar){
+    //   await this.googleCalendarService.createEvent(body);
+    // }
     const user = await this.userOperations.getuser(null, body.author);
     const newTask = await this.taskModel.create(body);
     user.tasks.push(newTask);
@@ -46,6 +51,9 @@ export class TasksService {
     id: string,
     body: UpdateTaskDto,
   ): Promise<UpdateTaskDto | Error> {
+    // if(body.isSyncedWithGoogleCalendar){
+    //   await this.googleCalendarService.updateEvent(id, body);
+    // }
     await this.getTask(id);
     const updatedTask = await this.taskModel.findByIdAndUpdate(id, body, {
       new: true,
@@ -67,6 +75,7 @@ export class TasksService {
   }
 
   async deleteTask(id: string): Promise<TaskDto | Error | Object> {
+
     const task = await this.getTask(id);
     await this.taskModel.findByIdAndDelete(id);
 
@@ -79,7 +88,9 @@ export class TasksService {
       user.tasks.splice(taskIndex, 1);
       await user.save();
     }
-
+    // if(task.isSyncedWithGoogleCalendar){
+    //   await this.googleCalendarService.deleteEvent(id);
+    // }
     return true;
   }
 }

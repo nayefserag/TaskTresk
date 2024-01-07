@@ -5,4 +5,7 @@ export const TaskSchema = new mongoose.Schema({
   author: { type: String },
   description: { type: String , default: '' },
   isCompleted: { type: Boolean, default: false },
+  isSyncedWithGoogleCalendar: { type: Boolean, default: false },
+  startDate: { type: Date , default: Date.now },
+  endDate: { type: Date },
 });
