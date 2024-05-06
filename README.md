@@ -1,6 +1,6 @@
 <p align="center">
   <a href="http://nestjs.com/" target="blank">
-    <img src="https://drive.google.com/uc?id=1GTY3BFIc_pEaeWmJ685hSs89_gVHEzZT" width="400" alt="Nest Logo" />
+    <img src="DALL_E_2024-01-03_18.14.00_-_Design_a_vibrant__cartoon-style_app_icon_for__TaskTrek___a_to-do_list_app._The_icon_should_feature_a_dynamic_and_colorful_cartoon_scene_that_suggests_-removebg-preview.png" width="400" alt="Nest Logo" />
   </a>
 
 
