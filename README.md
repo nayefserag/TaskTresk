@@ -1,8 +1,8 @@
 <p align="center">
   <a href="http://nestjs.com/" target="blank">
-    <img src="https://i.imgur.com/MLPw0SL.png" width="400" alt="Nest Logo" />
+    <img src="https://drive.google.com/uc?id=1GTY3BFIc_pEaeWmJ685hSs89_gVHEzZT" width="400" alt="Nest Logo" />
   </a>
-</p>
+
 
 <h1 align="center">TaskTresk</h1>
 
